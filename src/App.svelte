@@ -1,15 +1,19 @@
 <script>
 	import { appPrefix, categories } from './stores';
 	import Category from './Category.svelte';
+	import Transaction from './Transaction.svelte';
 
-	export let currentCategories = [];
 	export let name = "Winston's goddamn budget";
-	
-	let categorySubscription = categories.subscribe(val => currentCategories = val);
+	export let addingTransaction = false;
+	export let activeCategory = '';
+
+	function toggleTransaction() {
+    addingTransaction = !addingTransaction;
+  }
 
 	function totalAvailable() {
 		let budget = 0;
-		currentCategories.map((category) => {
+		$categories.forEach((category) => {
 			return budget += category.allocated;
 		});
 
@@ -17,7 +21,6 @@
 	}
 
 	function startBudget() {
-		console.log('budget started');
 		localStorage.removeItem(`${appPrefix}categories`);
 		categories.update(val => []);
 	}
@@ -27,9 +30,17 @@
 <main>
 	<h1>the goddamn budget</h1>
 	<p>You have ${totalAvailable()}.</p>
+	
+	{#if addingTransaction}
+		<Transaction category={activeCategory} on:toggleTransaction={toggleTransaction}/>
+	{/if}
+
 	<ul>
-		{#each currentCategories as category}
-			<Category category={category} />
+		{#each $categories as category}
+			<Category category={category} on:toggleTransaction={()=> {
+				toggleTransaction();
+				activeCategory = category.title;
+			}} />
 		{/each}
 	</ul>
 	<button on:click={startBudget}>Reset</button>

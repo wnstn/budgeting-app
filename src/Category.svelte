@@ -1,58 +1,46 @@
 <script>
-  import { categories } from './stores';
+  import { createEventDispatcher } from 'svelte';
+  import { get } from 'svelte/store';
+  import { transactions } from './stores';
+
+  const dispatch = createEventDispatcher();
 
   export let category;
-  export let title = category.title;
-  export let allocated = category.allocation;
-  export let remaining = category.remaining;
-  export let transactions = category.transactions;
-  export let spending = false;
+  export let showingTransactions = false;
+  export let categoryTransactions = [];
 
-  export let label = '';
-  export let amount = '';
+  console.log(category);
 
-  function toggleTransaction() {
-    spending = !spending;
+  function getCategoryTransactions() {
+    let trans = get(transactions);
+    console.log(trans);
+    categoryTransactions = trans.filter((tran) => tran.category = category.title);
   }
 
-  function addTransaction() {
-    console.log(`adding transaction ${label} with the amount of ${amount}`);
+  function toggleTransactions() {
+    showingTransactions = !showingTransactions;
 
-    categories.update(val => {
-      let current = val.findIndex(i => i.title === title);
-      console.log('current', current);
-      if (current === -1) return val;
-
-      console.log(val[current]);
-      val[current].transactions.push({
-        date: Date.now(),
-        label,
-        amount
-      });
-
-      return val;
-    });
+    if (showingTransactions){
+      getCategoryTransactions();
+    }
   }
+
 </script>
 
-<li class:spending>
-  {#if spending}
-    <div class="add-transaction">
-      <label>where</label>
-      <input type="text" bind:value={label} />
 
-      <label>amount</label>
-      <input type="number" bind:value={amount} />
+  <li on:click="{toggleTransactions}">  
+    <p>{category.title} has <strong>${category.remaining}</strong></p>
+    <button on:click|stopPropagation="{() => dispatch('toggleTransaction')}">Spend</button>
 
-      <button on:click={addTransaction}>submit</button>
+    {#if showingTransactions}
+      <ul class="transactions">
+        {#each categoryTransactions as transaction} 
+          <li>{transaction.vendor}</li>
+        {/each}
+      </ul>
+    {/if}
+  </li>
 
-      <button on:click={toggleTransaction}>cancel</button>
-    </div>
-  {:else}
-  <p>{title} has <strong>${remaining.toString()}</strong></p>
-  <button on:click={toggleTransaction}>Spend</button>
-  {/if}
-</li>
 
 <style>
   li {
@@ -76,17 +64,6 @@
     padding: 10px 20px;
   }
 
-  .spending {
-    height: 360px;
-  }
 
-  .add-transaction {
-    background: white;
-    position: absolute;
-    left: 1em;
-    right: 1em;
-    top: 1em;
-    bottom: 1em;
-    padding: 1em;
-  }
+
 </style>

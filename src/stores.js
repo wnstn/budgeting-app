@@ -1,65 +1,81 @@
-import { writable, readable } from 'svelte/store';
+import { writable, get } from 'svelte/store';
+import { budget } from './config';
 
 export const appPrefix = 'goddamnBudget_';
 
-const savedCategories = JSON.parse(localStorage.getItem(`${appPrefix}categories`))|| {};
-const savedTransactions = JSON.parse(localStorage.getItem(`${appPrefix}transactions`)) || []; 
+// category
+// {
+//  title: string
+//  allocated: readable number
+//  remaining: derived number
+//  rollover: writeable number
+// }
 
-export const paydates = writable([7, 22]);
-export const categories = writable(savedCategories);
-export const transactions = writable(savedTransactions);
+// transaction
+// {
+//  category: string
+//  vendor: string
+//  amount: number
+//  date: date
+// }
 
-categories.subscribe(value => {
-  let val = value ? value : [];
-  console.log('current object', val);
-  val = JSON.stringify(val);
-  localStorage.setItem(`${appPrefix}categories`, val);
-});
+export const paydates = writable(budget.paydates);
+export const categories = writable([]);
+export const transactions = writable([]);
 
-function hasCategory(current, title) {
-  return current.find(cat => cat && cat.title && cat.title === title);
-}
+const savedCategories = JSON.parse(localStorage.getItem(`${appPrefix}_categories`))|| [];
+const savedTransactions = JSON.parse(localStorage.getItem(`${appPrefix}_transactions`)) || []; 
+
+console.log('instantiating with', savedCategories, savedTransactions);
 
 categories.update(val => {
-  if (!hasCategory(val, "Groceries")) {
-    val.push({
-      title: "Groceries",
-      allocated: 300,
-      remaining: 300
-      });
-  }
+  budget.categories.forEach((cat) =>{
+    const exists = savedCategories.find((saved) => saved.title === cat.title)
 
-  if (!hasCategory(val, "Blow")) {
-    val.push({
-      title: "Blow",
-      allocated: 57,
-      remaining: 57
-      });
-  }
+    if (!exists) {
+      console.log("doesn't exist");
+      val.push(cat);
+    } else {
+      console.log('exists');
+      val.push(exists);
+    }
+  });
 
-  if (!hasCategory(val, "Dates")) {
-    val.push({
-      title: "Dates",
-      allocated: 30,
-      remaining: 30
-      });
-  }
-
-  if (!hasCategory(val, "Books")) {
-    val.push({
-      title: "Books",
-      allocated: 20,
-      remaining: 20
-      });
-  }
-
-  if (!hasCategory(val, "Gear")) {
-    val.push({
-      title: "Gear",
-      allocated: 50,
-      remaining: 50
-      });
-  }
-
+  val = calculateRemaining(savedTransactions, val);
+  writeToLocalStorage('categories', val);
   return val;
 });
+
+categories.subscribe((val) => {
+  writeToLocalStorage('categories', val);
+});
+
+transactions.subscribe((val) => {
+  categories.update(cats => calculateRemaining(val, cats));
+  writeToLocalStorage('transactions', val);
+})
+
+function calculateRemaining(transactions, cats) {
+  let updated = cats.map((cat) => {
+    const title = cat.title;
+    let local = transactions;
+
+    let spent = local.reduce((val, tran)=>{
+      if (tran.category === title) {
+        return val += tran.amount; 
+      }
+      return val;
+    }, 0);
+    console.log('currently spent', spent);
+    cat.remaining = cat.allocated - spent;
+
+    return cat;
+  });
+  return updated;
+}
+
+function writeToLocalStorage(category, val) {
+  val = JSON.stringify(val);
+  console.log('writing to LS', `${appPrefix}_${category}`, val);
+  localStorage.setItem(`${appPrefix}_${category}`, val);
+}
