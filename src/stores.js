@@ -31,7 +31,7 @@ console.log('instantiating with', savedCategories, savedTransactions);
 categories.update(val => {
   budget.categories.forEach((cat) =>{
     const exists = savedCategories.find((saved) => saved.title === cat.title)
-
+    
     if (!exists) {
       console.log("doesn't exist");
       val.push(cat);
@@ -40,7 +40,7 @@ categories.update(val => {
       val.push(exists);
     }
   });
-
+  
   val = calculateRemaining(savedTransactions, val);
   writeToLocalStorage('categories', val);
   return val;
@@ -63,7 +63,7 @@ function calculateRemaining(transactions, cats) {
   let updated = cats.map((cat) => {
     const title = cat.title;
     let local = transactions;
-
+    
     let spent = local.reduce((val, tran)=>{
       if (tran.category === title) {
         return val += tran.amount; 
@@ -72,7 +72,7 @@ function calculateRemaining(transactions, cats) {
     }, 0);
     console.log('currently spent', spent);
     cat.remaining = cat.allocated - spent;
-
+    
     return cat;
   });
   return updated;
