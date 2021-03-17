@@ -30,6 +30,13 @@ import Transaction from './Transaction.svelte';
     let [month, date] = new Date(utc).toLocaleDateString("en-US").split("/");
     return `${month}/${date}`;
   }
+
+  function removeTransaction(transaction) {
+    transactions.update((all)=>{
+      let i = all.findIndex((val) => val.date === transaction.date);
+      return all.splice(i, 1);
+    })
+  }
   
 </script>
 
@@ -41,7 +48,9 @@ import Transaction from './Transaction.svelte';
   {#if showingTransactions}
   <ul class="transactions">
     {#each categoryTransactions as transaction} 
-    <li>${transaction.amount} at {transaction.vendor} on {formattedDate(transaction.date)}</li>
+    <li>${transaction.amount} at {transaction.vendor} on {formattedDate(transaction.date)}
+    <button type="button" on:click="{removeTransaction(transaction)}">(remove)</button>
+    </li>
     {/each}
   </ul>
   {/if}
@@ -91,6 +100,16 @@ import Transaction from './Transaction.svelte';
     font-size: .9rem;
   }
 
+  .transactions button {
+    border: none;
+    outline: none;
+    padding: 2px 5px;
+    display: inline;
+    flex: none;
+    font-size: 90%;
+    background: none;
+    color: #510d64;
+  }
 
   
 </style>

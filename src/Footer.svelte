@@ -20,7 +20,7 @@
     bottom: 0;
     width: 100vw;
     height: 7vh;
-    background: black;
+    background: #222;
     z-index: 1000;
     display: flex;
     align-content: center;

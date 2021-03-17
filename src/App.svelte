@@ -1,5 +1,5 @@
 <script>
-  import { appPrefix, categories } from './stores';
+  import { categories } from './stores';
   import Category from './Category.svelte';
   import Transaction from './Transaction.svelte';
   import Footer from './Footer.svelte';
@@ -13,7 +13,6 @@
     addingTransaction = !addingTransaction;
   }
   
-
   categories.subscribe((val) => {
     let budget = 0;
     val.forEach((category) => {
@@ -22,11 +21,6 @@
     
     totalAvailable = budget;
   });
-  
-  function startBudget() {
-    localStorage.removeItem(`${appPrefix}categories`);
-    categories.update(val => []);
-  }
   
 </script>
 
@@ -37,7 +31,7 @@
   </header>
   
   {#if addingTransaction}
-  <Transaction category={activeCategory} on:toggleTransaction={toggleTransaction}/>
+    <Transaction category={activeCategory} on:toggleTransaction={toggleTransaction}/>
   {/if}
   
   <ul>

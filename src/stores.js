@@ -23,8 +23,8 @@ export const paydates = writable(budget.paydates);
 export const categories = writable([]);
 export const transactions = writable([]);
 
-const savedCategories = JSON.parse(localStorage.getItem(`${appPrefix}_categories`));
-const savedTransactions = JSON.parse(localStorage.getItem(`${appPrefix}_transactions`)); 
+const savedCategories = JSON.parse(localStorage.getItem(`${appPrefix}_categories`)) || [];
+const savedTransactions = JSON.parse(localStorage.getItem(`${appPrefix}_transactions`)) || []; 
 
 console.log('instantiating with', savedCategories, savedTransactions);
 
