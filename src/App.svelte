@@ -2,23 +2,26 @@
   import { appPrefix, categories } from './stores';
   import Category from './Category.svelte';
   import Transaction from './Transaction.svelte';
+  import Footer from './Footer.svelte';
   
   export let name = "Winston's goddamn budget";
   export let addingTransaction = false;
   export let activeCategory = '';
+  export let totalAvailable = 0;
   
   function toggleTransaction() {
     addingTransaction = !addingTransaction;
   }
   
-  function totalAvailable() {
+
+  categories.subscribe((val) => {
     let budget = 0;
-    $categories.forEach((category) => {
-      return budget += category.allocated;
+    val.forEach((category) => {
+      return budget += category.remaining;
     });
     
-    return budget;
-  }
+    totalAvailable = budget;
+  });
   
   function startBudget() {
     localStorage.removeItem(`${appPrefix}categories`);
@@ -28,8 +31,10 @@
 </script>
 
 <main>
-  <h1>the goddamn budget</h1>
-  <p>You have ${totalAvailable()}.</p>
+  <header>
+    <h1>the goddamn budget</h1>
+    <p class="help">your account has ${totalAvailable} in it.</p>
+  </header>
   
   {#if addingTransaction}
   <Transaction category={activeCategory} on:toggleTransaction={toggleTransaction}/>
@@ -43,32 +48,39 @@
     }} />
     {/each}
   </ul>
-  <button on:click={startBudget}>Reset</button>
+
+  <Footer />
+  
 </main>
 
 <style>
-  * {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    box-sizing: border-box;
-  }
-  
   main {
     padding: 0;
     width: 100%;
     margin: 0 auto;
     padding: 0;
   }
+
+  header {
+    padding: 8px;
+  }
   
   h1 {
     font-size: 2em;
     font-weight: 100;
     padding: 0;
-    margin: .5em 0;
+    margin: .5em 0 .2em;
+  }
+
+  .help {
+    margin: .3em 0;
+    font-size: .7em;
   }
   
   ul {
     list-style: none;
     margin: 0;
+    margin-bottom: 10vh;
     padding: 0;
   }
   
