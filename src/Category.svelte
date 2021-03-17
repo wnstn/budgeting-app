@@ -2,7 +2,6 @@
   import { createEventDispatcher } from 'svelte';
   import { get } from 'svelte/store';
   import { transactions } from './stores';
-import Transaction from './Transaction.svelte';
   
   const dispatch = createEventDispatcher();
   
@@ -10,11 +9,8 @@ import Transaction from './Transaction.svelte';
   export let showingTransactions = false;
   export let categoryTransactions = [];
   
-  console.log(category);
-  
   function getCategoryTransactions() {
     let trans = get(transactions);
-    console.log(trans);
     categoryTransactions = trans.filter((tran) => tran.category === category.title);
   }
   

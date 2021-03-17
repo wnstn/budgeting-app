@@ -33,10 +33,8 @@ categories.update(val => {
     const exists = savedCategories.find((saved) => saved.title === cat.title)
     
     if (!exists) {
-      console.log("doesn't exist");
       val.push(cat);
     } else {
-      console.log('exists');
       val.push(exists);
     }
   });
@@ -70,7 +68,6 @@ function calculateRemaining(transactions, cats) {
       }
       return val;
     }, 0);
-    console.log('currently spent', spent);
     cat.remaining = cat.allocated - spent;
     
     return cat;
@@ -80,6 +77,5 @@ function calculateRemaining(transactions, cats) {
 
 function writeToLocalStorage(category, val) {
   val = JSON.stringify(val);
-  console.log('writing to LS', `${appPrefix}_${category}`, val);
   localStorage.setItem(`${appPrefix}_${category}`, val);
 }
