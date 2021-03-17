@@ -23,8 +23,8 @@ export const paydates = writable(budget.paydates);
 export const categories = writable([]);
 export const transactions = writable([]);
 
-const savedCategories = JSON.parse(localStorage.getItem(`${appPrefix}_categories`))|| [];
-const savedTransactions = JSON.parse(localStorage.getItem(`${appPrefix}_transactions`)) || []; 
+const savedCategories = JSON.parse(localStorage.getItem(`${appPrefix}_categories`));
+const savedTransactions = JSON.parse(localStorage.getItem(`${appPrefix}_transactions`)); 
 
 console.log('instantiating with', savedCategories, savedTransactions);
 
@@ -46,13 +46,17 @@ categories.update(val => {
   return val;
 });
 
+transactions.update(val => {
+  return savedTransactions.length > 0 ? savedTransactions : val;
+})
+
 categories.subscribe((val) => {
   writeToLocalStorage('categories', val);
 });
 
 transactions.subscribe((val) => {
-  categories.update(cats => calculateRemaining(val, cats));
   writeToLocalStorage('transactions', val);
+  categories.update(cats => calculateRemaining(val, cats));
 })
 
 function calculateRemaining(transactions, cats) {
