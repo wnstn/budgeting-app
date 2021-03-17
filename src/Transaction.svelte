@@ -39,7 +39,7 @@
     <div class="controls">
       <button on:click="{() => dispatch('toggleTransaction')}">cancel</button>
     
-      <button type="submit" on:click|preventDefault={addTransaction}>submit</button>
+      <button type="submit" on:click={addTransaction}>submit</button>
     </div>
   </form>
 </div>

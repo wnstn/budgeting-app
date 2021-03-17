@@ -29,6 +29,10 @@
 
   function removeTransaction(transaction) {
     transactions.update((all)=>{
+      if (all.length === 1) {
+        return [];
+      }
+
       let i = all.findIndex((val) => val.date === transaction.date);
       return all.splice(i, 1);
     })
@@ -57,7 +61,7 @@
   li {
     box-sizing: border-box;
     width: 100%;
-    padding: .6em 1em;
+    padding: .8em 1em;
     background: rgb(187,246,242);
     background: linear-gradient(180deg, rgba(187,246,242,1) 0%, rgba(228,170,249,1) 100%);
     font-size: 1.25em;

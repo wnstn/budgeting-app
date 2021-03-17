@@ -68,7 +68,7 @@
 
   .help {
     margin: .3em 0;
-    font-size: .7em;
+    font-size: .8em;
   }
   
   ul {
