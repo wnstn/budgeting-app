@@ -66,8 +66,8 @@
     border-radius: 3px;
     left: 1em;
     right: 1em;
-    top: 20vh;
-    height: 60vh;
+    top: 10vh;
+    height: 50vh;
     padding: 1em;
   }
 
