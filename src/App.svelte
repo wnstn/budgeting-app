@@ -27,7 +27,7 @@
 <main>
   <header>
     <h1>the goddamn budget</h1>
-    <p class="help">your account has ${totalAvailable} in it.</p>
+    <p class="help">your account has ${parseInt(totalAvailable).toFixed(2)} in it.</p>
   </header>
   
   {#if addingTransaction}
