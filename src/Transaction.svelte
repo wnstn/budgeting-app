@@ -31,7 +31,7 @@
 <div class="add-transaction" transition:fade="{{delay: 0, duration: 300}}" on:click="{() => dispatch('toggleTransaction')}">
   <form on:click|stopPropagation>
     <h2>where'd the fuckin money go</h2>
-    <p class="help"><em>{category} has ${available} available.</em></p>
+    <p class="help"><em>{category} has ${parseInt(available).toFixed(2)} available.</em></p>
     <input type="hidden" bind:value={category} />
     
     <label for="vendor">where</label>
