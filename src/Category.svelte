@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import { get } from 'svelte/store';
   import { transactions } from './logic/stores';
+  import { slide } from 'svelte/transition';
   
   const dispatch = createEventDispatcher();
   
@@ -42,13 +43,13 @@
 
 
 <li on:click="{toggleTransactions}">  
-  <p>{category.title} has <strong>${category.remaining}</strong></p>
+  <p>{category.title} has <strong>${parseFloat(category.remaining).toFixed(2)}</strong></p>
   <button on:click|stopPropagation="{() => dispatch('toggleTransaction')}">spend</button>
   
   {#if showingTransactions}
-  <ul class="transactions">
+  <ul class="transactions" transition:slide="{{delay:0, duration: 250}}">
     {#each categoryTransactions as transaction} 
-    <li>${transaction.amount} at {transaction.vendor} on {formattedDate(transaction.date)}
+    <li>${parseFloat(transaction.amount).toFixed(2)} at {transaction.vendor} on {formattedDate(transaction.date)}
     <button type="button" on:click="{removeTransaction(transaction)}">(remove)</button>
     </li>
     {/each}

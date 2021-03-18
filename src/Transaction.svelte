@@ -13,13 +13,14 @@
   function addTransaction() {
     transactions.update(val => {
       let amt = parseFloat(amount).toFixed(2);
+      console.log('first', val);
       val.push({
         date: Date.now(),
         category,
         vendor,
-        amount: amt
+        amount: parseFloat(amt)
       });
-      
+      console.log('second', val);
       return val;
     });
     
@@ -37,7 +38,7 @@
     <input id="vendor" type="text" bind:value={vendor} />
     
     <label for="value">amount</label>
-    <input id="value" type="number" bind:value={amount} />
+    <input id="value" type="number" step=".01" bind:value={amount} />
     
     <div class="controls">
       <button on:click="{() => dispatch('toggleTransaction')}">cancel</button>

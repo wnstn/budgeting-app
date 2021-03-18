@@ -15,7 +15,7 @@ function calculateRemaining(transactions, cats) {
   let updated = cats.map((cat) => {
     const title = cat.title;
     let local = transactions;
-    
+
     let spent = local.reduce((val, tran)=>{
       if (tran.category === title) {
         return val += tran.amount; 
@@ -61,13 +61,15 @@ function createTransactions() {
   transactions.update(val => {
     if (savedTransactions.length > 0 ){
       return savedTransactions.map((trans)=>{
-        trans.amount = parseFloat(trans.amount).toFixed(2);
+        trans.amount = parseFloat(parseFloat(trans.amount).toFixed(2));
+        return trans;
       });
     }
     return val;
   })
 
   transactions.subscribe((val) => {
+
     writeToLocalStorage('transactions', val);
     categories.update(cats => calculateRemaining(val, cats));
   })
