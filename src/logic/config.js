@@ -4,19 +4,19 @@ export const budget = {
   paydates: [7, 22],
   categories: [{
     title: "groceries",
-    allocated: 200
+    allocated: 300
     },
     {
     title: "whatever",
-    allocated: 100
+    allocated: 57
     },
     {
     title: "dates",
-    allocated: 100
+    allocated: 30
     },
     {
     title: "books",
-    allocated: 50
+    allocated: 20
     },
     {
     title: "gear",
