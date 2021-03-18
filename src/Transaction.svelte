@@ -1,12 +1,13 @@
 <script>
-  import { transactions } from './stores';
+  import { transactions } from './logic/stores';
   import { fade } from 'svelte/transition';
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
   
   export let vendor = '';
   export let amount = '';
-  export let category ='';
+  export let category = '';
+  export let available = '';
   
   
   function addTransaction() {
@@ -28,6 +29,7 @@
 <div class="add-transaction" transition:fade="{{delay: 0, duration: 300}}" on:click="{() => dispatch('toggleTransaction')}">
   <form on:click|stopPropagation>
     <h2>where'd the fuckin money go</h2>
+    <p class="help"><em>{category} has ${available} available.</em></p>
     <input type="hidden" bind:value={category} />
     
     <label for="vendor">where</label>
@@ -73,6 +75,12 @@
 
   h2 {
     font-size: 1.2em;
+    margin-bottom: .4em;
+  }
+
+  .help {
+    margin: 0;
+    font-size: .8rem;
   }
 
   label,

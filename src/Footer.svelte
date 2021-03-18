@@ -1,12 +1,13 @@
 <script>
   import Settings from './Settings.svelte';
+  import { paydate } from './logic/stores';
   export let showSettings = false;
 </script>
 
 <footer>
   <button type="button" on:click="{() => showSettings = !showSettings}">Setup</button>
 
-  <p>8 days until payday.</p>
+  <p>{$paydate.daysRemaining} until payday.</p>
 
 
   {#if showSettings}

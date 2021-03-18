@@ -1,8 +1,12 @@
 <script>
-import { appPrefix, categories } from './stores';
+import { categories, paydate } from './logic/stores';
+import { refillBudgets } from './logic/refill';
+import { writeToLocalStorage } from './logic/setup';
+import { appPrefix } from './logic/config';
 import { slide } from 'svelte/transition';
 import { createEventDispatcher, onDestroy } from 'svelte';
 const dispatch = createEventDispatcher();
+import moment from 'moment';
 
 export let confirming = false;
 export let actionMethod = null;
@@ -10,6 +14,15 @@ export let actionMethod = null;
 function restartBudget() {
   localStorage.removeItem(`${appPrefix}_categories`);
   localStorage.removeItem(`${appPrefix}_transactions`);
+}
+
+function manualPayday() {
+  refillBudgets();
+
+  writeToLocalStorage('categories', {
+    lastUpdated: Date.now(),
+    upcoming: moment.utc($paydate.dates[1])
+  });
 }
 
 onDestroy(() => {
@@ -32,7 +45,15 @@ onDestroy(() => {
           confirming = false;
         }
         }}">Reset App</button>
-      <button type="button">Start next pay period</button>
+      <button type="button" on:click="{() => {
+        if (!confirming) {
+          actionMethod = manualPayday;
+          confirming = 'Start next pay period now';
+        } else {
+          actionMethod = null;
+          confirming = false;
+        }
+      }}">Start next pay period</button>
   </div>
   {#if confirming}
     <div class="confirmation">
@@ -52,6 +73,9 @@ onDestroy(() => {
       </li>
     {/each}
   </ul>
+
+    <h2>Pay Dates</h2>
+    <p>Your paydates are the {$paydate.dates[0].format('Do')} and the {$paydate.dates[1].format('Do')} of every month. Next paycheck is in {$paydate.daysRemaining}, on {$paydate.dates[0].format('MMM D')}.</p>
   </div>
 
 
@@ -100,6 +124,14 @@ onDestroy(() => {
     flex-wrap: wrap;
     list-style: circle;
     margin: 0;
+  }
+
+  p {
+    display: flex;
+    flex: 1 1 100%;
+    color: #fff;
+    margin: 0 16px;
+    font-size: 1.1em;
   }
 
   li {

@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { get } from 'svelte/store';
-  import { transactions } from './stores';
+  import { transactions } from './logic/stores';
   
   const dispatch = createEventDispatcher();
   

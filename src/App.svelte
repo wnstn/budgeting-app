@@ -1,5 +1,5 @@
 <script>
-  import { categories } from './stores';
+  import { categories } from './logic/stores';
   import Category from './Category.svelte';
   import Transaction from './Transaction.svelte';
   import Footer from './Footer.svelte';
@@ -31,14 +31,14 @@
   </header>
   
   {#if addingTransaction}
-    <Transaction category={activeCategory} on:toggleTransaction={toggleTransaction}/>
+    <Transaction category={activeCategory.title} available={activeCategory.remaining} on:toggleTransaction={toggleTransaction}/>
   {/if}
   
   <ul>
     {#each $categories as category}
     <Category category={category} on:toggleTransaction={()=> {
       toggleTransaction();
-      activeCategory = category.title;
+      activeCategory = category;
     }} />
     {/each}
   </ul>
