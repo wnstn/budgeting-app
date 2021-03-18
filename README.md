@@ -16,7 +16,7 @@ I hate capitalism! I hate money! The concept of property and ownership is rather
 * There is no goddamn tracking.
 * You gotta set it up and host it yourself if you wanna modify the categories.
 
-[screenshot of the goddamn app](https://user-images.githubusercontent.com/779882/111620562-44563080-87bd-11eb-8369-ec02e69e7f70.png)
+![screenshot of the goddamn app](https://user-images.githubusercontent.com/779882/111620562-44563080-87bd-11eb-8369-ec02e69e7f70.png)
 
 
 
