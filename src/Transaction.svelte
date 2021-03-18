@@ -12,11 +12,12 @@
   
   function addTransaction() {
     transactions.update(val => {
+      let amt = parseFloat(amount).toFixed(2);
       val.push({
         date: Date.now(),
         category,
         vendor,
-        amount
+        amount: amt
       });
       
       return val;

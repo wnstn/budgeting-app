@@ -59,7 +59,12 @@ function createCategories() {
 function createTransactions() {
 
   transactions.update(val => {
-    return savedTransactions.length > 0 ? savedTransactions : val;
+    if (savedTransactions.length > 0 ){
+      return savedTransactions.map((trans)=>{
+        trans.amount = parseFloat(trans.amount).toFixed(2);
+      });
+    }
+    return val;
   })
 
   transactions.subscribe((val) => {
