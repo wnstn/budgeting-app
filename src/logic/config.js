@@ -8,7 +8,7 @@ export const budget = {
     },
     {
     title: "whatever",
-    allocated: 57
+    allocated: 80
     },
     {
     title: "dates",
@@ -16,7 +16,7 @@ export const budget = {
     },
     {
     title: "books",
-    allocated: 20
+    allocated: 40
     },
     {
     title: "gear",
